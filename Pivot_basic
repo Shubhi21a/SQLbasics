@@ -1,0 +1,21 @@
+-- Creating a basic pivot in SQL
+
+-- Step 1 : write query for the info needed
+  select customer_id, amount, left(datename(month, txn_date),3) as txn_month
+ from dbo.al_dl_customer
+ where txn_date in ('2019-08-31','2019-07-31')
+ 
+  -- step 2: write the pivot part
+ sum(amount) for txn_month in ('Jul','Aug') as pvt --WRONG-- don't put months' names in '' - will give error
+ -- so : No 'Jul' , but  simply Jul
+ pivot (sum(amount) for txn_month in (Jul,Aug)) as pvt
+ 
+ -- step 3: append the two
+ -- select * from (part 1) 
+ --pivot (part 2)
+ 
+ select * from (select customer_id, amount, left(datename(month, txn_date),3) as txn_month
+ from dbo.al_dl_customer
+ where txn_date in ('2019-08-31','2019-07-31'))ss
+ pivot (sum(amount) for txn_month in (Jul,Aug)) as pvt
+  
