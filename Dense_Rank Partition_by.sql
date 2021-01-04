@@ -43,3 +43,5 @@ select * from
 (select *, DENSE_RANK() over (partition by gender order by salary desc) as denseRank from
 (select distinct FirstName, LastName, Gender,Salary from dbo.Employees)ss)tt
 where denseRank = 2
+
+-- table used created from KudVenkat's script : https://csharp-video-tutorials.blogspot.com/2014/05/part-1-how-to-find-nth-highest-salary_17.html
