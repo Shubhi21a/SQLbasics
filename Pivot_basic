@@ -19,3 +19,16 @@
  where txn_date in ('2019-08-31','2019-07-31'))ss
  pivot (sum(amount) for txn_month in (Jul,Aug)) as pvt
   
+-----Generic pivot
+select customer_id, M3,M2,M1 FROM 
+( SELECT customer_id, amt, bal_date,
+lead(amt,2) over (partition by customer_id order by bal_date desc) as M3,
+lead(amt,1) over (partition by customer_id order by bal_date desc) as M2,
+lead(amt,0) over (partition by customer_id order by bal_date desc) as M1
+from
+(select customer_id, amt, bal_date from tbl_prev_months
+where bal_date >= cast(dateadd(month,-2,(dateadd(day,-day(getdate())),getdate()))) as date)
+union all
+select customer_id, amt, bal_date from tbl_thismonth)tt
+where bal_date = (select max(bal_date) from tbl_thismonth)
+
