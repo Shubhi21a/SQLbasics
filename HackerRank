@@ -1,11 +1,12 @@
+--1. even id/ using modulus
 select distinct city from station where id%2 = 0 # distinct city with even id 
 
-select count(city)- count(distinct city) from station; # diff b/w total and unique records
+--2. diff b/w total and unique records
+select count(city)- count(distinct city) from station; 
 
-
---- select entry with lowest char & highest char, in case of mutiple qualifying entries, select one which comes first alphabetically
+---3. select entry with lowest char & highest char, in case of mutiple qualifying entries, select one which comes first alphabetically
 /*Though a simple application of top, order by & union, combining union with order by was a challenge, as it gave errors
-- correct syntax : 
+correct syntax : 
 select c1, c2 from (top condition query) alias1 union select c1,c2 from (condition 2 query) alias2 */
 
 select city, l from
@@ -13,3 +14,10 @@ select city, l from
 union
 select city, l from
 (select top 1 city, len(city) as l from station order by len(city) desc, city asc) t2;
+
+--4. select distinct cities starting with any vowel
+-- method 1
+*select distinct city from station where city like 'a%' or city like 'e%' or city like 'i%' or city like 'o%' or city like 'u%' 
+-- method 2
+select distinct city from station where substring(city,1,1) in ('a','e','i','o','u') 
+-- SUBSTRING(string, start, length)  --https://www.w3schools.com/sql/func_sqlserver_substring.asp
