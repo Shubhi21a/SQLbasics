@@ -21,3 +21,19 @@ select city, l from
 -- method 2
 select distinct city from station where substring(city,1,1) in ('a','e','i','o','u') 
 -- SUBSTRING(string, start, length)  --https://www.w3schools.com/sql/func_sqlserver_substring.asp
+
+--5. select distinct cities that start & end with a vowel
+- method 1
+select distinct city from station where city like '[aeiou]%' and city like '%[aeiou]'
+-- https://stackoverflow.com/questions/8928378/using-regex-in-sql-server
+
+-- method 2
+select distinct(city) from station where (city like '%a' or city like '%e' or city like '%i' or city like '%o' or city like '%u') 
+and (city like 'A%' or city like 'E%' or city like 'I%' or city like 'O%' or city like 'U%') order by city
+
+-- method 3
+select distinct city from station where SUBSTRING(city,len(city),1) like "%[aeiou]" and city like "[aeiou]%";
+
+-- method 4
+select distinct city from station where right(city,1) in ('A','E','I','O','U') and left(city,1) in ('A','E','I','O','U') 
+-- https://datatofish.com/left-right-substring-sql-server/
