@@ -49,7 +49,7 @@ select name from students
 where marks>75
 order by right(name,3),id;
 
---9. While loop 
+--9. While loop, replicate 
 declare @counter int
 set @counter = 1
 
