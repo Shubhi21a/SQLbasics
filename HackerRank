@@ -48,3 +48,13 @@ select distinct city from station where city not like '%[aeiou]'
 select name from students
 where marks>75
 order by right(name,3),id;
+
+--9. While loop 
+declare @counter int
+set @counter = 1
+
+while @counter<=20
+begin
+print replicate('* ',@counter)
+set @counter = @counter+1
+end;
