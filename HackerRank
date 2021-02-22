@@ -83,3 +83,16 @@ order by ct,occupation;
 /*There are a total of 3 doctors.
 There are a total of 4 actors.
 There are a total of 4 singers. */
+
+-- 12. Text pivot. ***********
+
+select Doctor,Professor,Singer,Actor from
+(select occupation,name,row_number() over (partition by occupation order by name)  as rno
+from occupations)ss
+pivot (max(name) for occupation in (Doctor,Professor,Singer,Actor)) as pvt;
+
+-- step 1  -- create base view (long view of needed data)
+select occupation,name,row_number() over (partition by occupation order by name)  as rno
+from occupations
+
+-- step 2-- write pivot with the aggregation for necessary metric/field, for the needed columns
