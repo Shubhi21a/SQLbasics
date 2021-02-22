@@ -65,3 +65,21 @@ when ((a+b)>c and (b+c)>a and (a+c)>b) and (a=b or b=c or c=a) then 'Isosceles'
 when ((a+b)>c and (b+c)>a and (a+c)>b) and (a<>b and b<>c) then 'Scalene'
 else 'Not A Triangle' end
 from triangles;
+
+-- 11. Occupation
+Select concat(name,'(',left(occupation,1),')')
+from occupations
+order by name; 
+-- output : Name(P), if occupation is Professor
+--Samantha(A)
+
+select use_col from
+(select concat('There are a total of ',count(*),' ',lower(occupation),'s.') as use_col,
+ count(*) as ct,occupation
+ from occupations
+group by occupation)ss
+order by ct,occupation;
+
+/*There are a total of 3 doctors.
+There are a total of 4 actors.
+There are a total of 4 singers. */
