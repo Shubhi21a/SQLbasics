@@ -58,3 +58,10 @@ begin
 print replicate('* ',@counter)
 set @counter = @counter+1
 end;
+
+-- 10. Triangle
+select case when (a=b and b=c and c=a) then 'Equilateral'
+when ((a+b)>c and (b+c)>a and (a+c)>b) and (a=b or b=c or c=a) then 'Isosceles'
+when ((a+b)>c and (b+c)>a and (a+c)>b) and (a<>b and b<>c) then 'Scalene'
+else 'Not A Triangle' end
+from triangles;
