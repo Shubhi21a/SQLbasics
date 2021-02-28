@@ -96,3 +96,13 @@ select occupation,name,row_number() over (partition by occupation order by name)
 from occupations
 
 -- step 2-- write pivot with the aggregation for necessary metric/field, for the needed columns
+
+--- Node, Leaf, Root categorization
+select N, case when P is null then 'Root'
+when N not in ( select P from BST where P is not null) then 'Leaf' else 'Inner' end 
+from BST order by N
+
+/* Node Parent
+   R     Null
+   I      R/I
+   L      I  */
