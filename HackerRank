@@ -106,3 +106,18 @@ from BST order by N
    R     Null
    I      R/I
    L      I  */
+
+---- Substring + join with an aggregated table
+select company_code, founder, lmgr,smgr,mgr,emp from (
+select c.founder, substring(c.company_code,2,2) as code,e.*
+from company c
+left join 
+(select  company_code, count(distinct(employee_code)) as emp,
+ count(distinct(manager_code)) as mgr,
+count(distinct(senior_manager_code)) as smgr,count(distinct(lead_manager_code))as lmgr
+ from employee 
+ group by company_code) as e
+ on c.company_code = e.company_code) tt
+ order by code 
+/* The company_code is string, so the sorting should not be numeric.
+For example, if the company_codes are C_1, C_2, and C_10, then the ascending company_codes will be C_1, C_10, and C_2. */
