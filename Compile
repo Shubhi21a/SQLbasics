@@ -1,0 +1,9 @@
+---1. simple case when
+select creation_date,datediff(year,creation_date,getdate()),
+case when datediff(year,creation_date,getdate())>= 1 then 'Established' else 'New' end as cx_grp
+from table_name  --- this will round off, for more accurate split, use below
+
+---2. simple case when
+select creation_date,datediff(day,creation_date,getdate()),
+case when datediff(day,creation_date,getdate())>= 365 then 'Established' else 'New' end as cx_grp 
+from table_name 
