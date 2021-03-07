@@ -32,3 +32,18 @@ union all
 select customer_id, amt, bal_date from tbl_thismonth)tt
 where bal_date = (select max(bal_date) from tbl_thismonth)
 
+
+-- generic pivot
+select * from 
+(select category, case when datediff(day,creation_date,getdate()) <= 30 then 'one_month'
+when datediff(day,creation_date,getdate())>30 and datediff(day,creation_date,getdate()) <= 60 then 'two_months' end as timeline
+from tbl_name
+where datediff(day,creation_date,getdate()) <= 60
+and category in ('A','B')) ss
+pivot (count(timeline) for timeline in (one_month,two_months)) as pvt
+
+--- output of above
+category	one_month	two_months
+A       	2102	    2011
+B       	22231	    23241
+
