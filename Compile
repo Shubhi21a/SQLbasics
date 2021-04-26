@@ -253,3 +253,52 @@ len(a_id) as original_len,
 len(concat(left(a_id,4),replicate('X',(len(a_id)-8)),right(a_id,4))) as redacted_len 
 from tbl
 
+
+--9. random pvt 2
+drop table #temp
+select * 
+  into #temp
+from (
+  select customer_code, metric1, metric2, left(datename(month,b_date),3) as b_month
+  from dbo.al_tbl
+  where b_date in ('2019-08-31','2019-07-31') ) as s
+pivot
+(sum(metric1)
+  for b_month in (Jul,Aug) ) as PVT     
+-- this pivots metric1, and shows records twice- for each months' metric2.   
+
+
+-- Step 1 : write query for the info needed
+select customer_Code, metric1, left(datename(month, b_date),3) as b_month
+from dbo.al_tbl
+where b_date in ('2019-08-31','2019-07-31') 
+
+
+-- step 2: write the pivot part
+sum(metric1) for b_month in ('Jul','Aug') as pvt --WRONG-- don't put months' names in '' - will give error
+-- so : No 'Jul' , but  simply Jul
+pivot (sum(metric1) for b_month in (Jul,Aug)) as pvt
+
+-- step 3: append the two
+-- select * from (part 1) 
+--pivot (part 2)
+
+select * from (select customer_Code, metric1, left(datename(month, b_date),3) as b_month
+from dbo.al_tbl
+where b_date in ('2019-08-31','2019-07-31'))ss
+pivot (sum(metric1) for b_month in (Jul,Aug)) as pvt
+
+-- if you don't put ss, this error comes : Msg 156, Level 15, State 1, Line 4 Incorrect syntax near the keyword 'pivot'.
+  
+  
+   select customer_code, left(datename(month,b_date),3) as b_month
+(isnull(col1,0) + isnull(col2,0) + isnull(col3,0) +
+ isnull(col4,0) +isnull(col5,0) +isnull(col6,0)) as total_sum
+ from tbl
+ union all 
+  select customer_code, , left(datename(month,b_date),3) as b_month
+(isnull(col1,0) + isnull(col2,0) + isnull(col3,0) +
+ isnull(col4,0) +isnull(col5,0) +isnull(col6,0)) as total_sum
+ from al_customer_master
+ where b_date = '2019-12-31'
+ pivot (sum(total_sum) for  b_month in (Jan, Dec)) as pvt
