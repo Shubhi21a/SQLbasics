@@ -302,3 +302,14 @@ pivot (sum(metric1) for b_month in (Jul,Aug)) as pvt
  from al_customer_master
  where b_date = '2019-12-31'
  pivot (sum(total_sum) for  b_month in (Jan, Dec)) as pvt
+ 
+ --10. misc
+ /* •	Sum in sql sms records, as in rows.
+Hence, you specify group by  there
+•	To add column values, you use  +
+•	Is null
+Isnull(col1,0)+isnull(col2,0) sums col1 and col 2. If value for any record is NULL, it will consider it as 0, because of uus using isnull(col1,0)
+Col1	Col2	Col 1+ col 2
+2	5	7
+NULL	2	2
+*/
