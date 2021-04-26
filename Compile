@@ -7,3 +7,249 @@ from table_name  --- this will round off, for more accurate split, use below
 select creation_date,datediff(day,creation_date,getdate()),
 case when datediff(day,creation_date,getdate())>= 365 then 'Established' else 'New' end as cx_grp 
 from table_name 
+
+
+--3. String practice basic
+select ASCII('A')
+select ASCII('ABC') -- still same result as ASCII A, coz it only reads first char
+
+select char (65)
+
+declare @start int
+set @start = 65
+while (@start <=90)
+begin
+select char(@start)
+set @start =  @start + 1
+end
+
+---- removing white spaces
+select ltrim('hey')
+select ltrim('             hey')
+select ltrim(firstname) as firstname from table
+
+select len('   yo   ') -- length is 5 (3 spaces before + 2 char, and not 3+2+3.. spaces in end not counted
+select len(ltrim('   yo   '))
+
+--4. Date random practice
+
+select month(getdate())
+select getdate()
+SELECT CONVERT(VARCHAR(10), getdate(), 111);
+
+select convert(varchar(10),getdate(),103)
+select eomonth (dateadd(m,-1,convert(varchar(10),getdate(),103)))
+
+SELECT DATEADD(month, -1,(getdate())
+
+--5. Info from net
+DECLARE @variable_name datatype [ = initial_value ],
+        @variable_name datatype [ = initial_value ],
+        ...;
+Parameters or Arguments
+variable_name:The name to assign to the variable.
+datatype:The datatype to assign to the variable.
+initial_value: Optional. It is the value initially assigned to the variable when it is declared.
+
+DECLARE @site_value INT;
+To assign a value to the @site_value variable, you can use the SET statement, as follows:
+
+SET @site_value = 10;
+This SET statement would assign the variable @site_value to the integer 10.
+
+
+In SQL Server (Transact-SQL), the DATEADD function returns a date after which a certain time/date interval has been added.
+
+Syntax
+The syntax for the DATEADD function in SQL Server (Transact-SQL) is:
+
+DATEADD( interval, number, date )
+
+/*The time/date interval that you wish to add. It can be one of the following values:
+
+Value (any one of)	Explanation
+year, yyyy, yy	Year interval
+quarter, qq, q	Quarter interval
+month, mm, m	Month interval
+dayofyear	Day of year interval
+day, dy, y	Day interval
+week, ww, wk	Week interval
+weekday, dw, w	Weekday interval
+hour, hh	Hour interval
+minute, mi, n	Minute interval
+second, ss, s	Second interval
+millisecond, ms	Millisecond interval
+
+
+number- The number of intervals that you wish to add.
+date-The date to which the interval should be added.
+
+Note
+If you specify a positive value for the number parameter, the DATEADD function will add the interval to the date.
+If you specify a negative value for the number parameter, the DATEADD function will subtract the interval from the date.
+If you specify a decimal value for the number parameter, the DATEADD function will only use the integer portion of the number (and discard the decimal portion). */
+
+--6. w3
+SELECT OrderID, Quantity,
+CASE
+    WHEN Quantity > 30 THEN "The quantity is greater than 30"
+    WHEN Quantity = 30 THEN "The quantity is 30"
+    ELSE "The quantity is something else"
+END
+FROM OrderDetails;
+
+Generic: 
+
+SELECT field names
+CASE
+when 'condition 1' then
+when 'condition 2' then ' ' 
+END 
+FROM table 
+
+
+SELECT field1, field 2 
+CASE
+WHEN x 	THEN y
+WHEN a 	THEN b
+ELSE c
+END
+FROM table name
+
+
+/* The LIKE operator is used in a WHERE clause to search for a specified pattern in a column.
+
+There are two wildcards used in conjunction with the LIKE operator:
+
+% - The percent sign represents zero, one, or multiple characters
+_ - The underscore represents a single character
+Note: MS Access uses a question mark (?) instead of the underscore (_).
+
+The percent sign and the underscore can also be used in combinations! 
+
+
+LIKE Operator			Description
+WHERE CustomerName LIKE 'a%'	Finds any values that start with "a"
+WHERE CustomerName LIKE '%a'	Finds any values that end with "a"
+WHERE CustomerName LIKE '%or%'	Finds any values that have "or" in any position
+WHERE CustomerName LIKE '_r%'	Finds any values that have "r" in the second position
+WHERE CustomerName LIKE 'a_%_%'	Finds any values that start with "a" and are at least 3 characters in length
+WHERE ContactName LIKE 'a%o'	Finds any values that start with "a" and ends with "o" */
+
+# Wildcard
+
+/* Using the [!charlist] Wildcard
+The two following SQL statements select all customers with a City NOT starting with "b", "s", or "p": */
+
+SELECT * FROM Customers
+WHERE City LIKE '[!bsp]%';
+
+# OR
+
+SELECT * FROM Customers
+WHERE City NOT LIKE '[bsp]%';
+
+# The following SQL statement selects all customers with a City starting with "a", "b", or "c":
+SELECT * FROM Customers
+WHERE City LIKE '[a-c]%';
+
+# The IN operator is a shorthand for multiple OR conditions
+
+# The following SQL statement selects all customers that are from the same countries as the suppliers:
+
+SELECT * FROM Customers
+WHERE Country IN (SELECT Country FROM Suppliers);
+
+/* SQL Aliases
+SQL aliases are used to give a table, or a column in a table, a temporary name.
+
+Aliases are often used to make column names more readable.
+
+An alias only exists for the duration of the query. */
+
+--7. coalsce
+-- the one mentioned first will get priority in terms of contact details
+-- use case select coalesce(your_no, alternate_no) as contact_no
+
+select top 5 coalesce(email_id,'no id')  as email from tbl
+select top 5 isnull(email_id,'no id')  as email from tbl
+
+select top 5 cid, 
+case when email_id is null then 'no id' else email_id end as email_id from tbl
+
+--- Use case!
+select top 10 cid, coalesce (email, mob,'no details') as contact from tbl  -- if both are null, it will show ' no details'
+
+---8. More string
+select left('abcdef',3)
+
+select right('abcdef',3)
+
+
+-- charindex('what_to_find','where_to_find','index_to_start_finding_from')
+-- the 3rd parameter is optional, don't have to necessarily give it
+select charindex('@','aa@gmail.com') -- maybe we want to find 2nd instance of something
+
+-- substring
+select substring ('abcdef',2,3)
+select substring ('abcdef',2,4)-- starts at posn 4, and gives 4 char from there, including what's at posn 2
+
+select substring('aa@gmail.com',charindex('@','aa@gmail.com')+1, len('aa@gmail.com')) 
+-- +1 done, so that it does not pick up @
+  
+  select top 5 email from tbl
+where email is not null
+
+
+select top 5 email,
+substring(email, charindex('@',email)+1, (len(email)- charindex('@',email))) as domain_name
+from tbl
+where email is not null
+
+select count(email), -- count (*) also gets same output
+substring(email, charindex('@',email)+1, (len(email)- charindex('@',email))) as domain_name
+from tbl
+group by substring(email, charindex('@',email)+1, (len(email)- charindex('@',email)))
+order by count(email) desc
+
+
+
+--- 9. random
+select top 5 * from tbl
+
+select *, left(t_id,2) as t_type from tbl
+select t_id, substring(t_id,1,3) as t_type from tbl -- selects 1st 3 letters
+select top 15 t_id, substring(t_id,1,2) as t_type from tbl -- selects 1st 2 letters from beginning
+
+select top 15 t_id, substring(t_id,2,2) as t_type from tbl -- selects 2 letters, from location 2
+
+select distinct t_type from (select *, left(t_id,2) as t_type from tbl) ss -- gives error without ss
+
+select t_type, count(*) from (select *, left(t_id,2) as t_type from tbl) ss
+group by t_type -- gives error without ss
+
+-- selecting last 4 digits
+select right(a_id,4) as last_4 from tbl
+-- select substr(a_id, length(a_id)-3,4) -- doesn't work for sql server
+
+select top 15 a_id, concat(left(a_id,4),'XXXX',right(a_id,4)) as display 
+from tbl
+-- will work in cases of same length, in varying length?
+
+select replicate(3,4)-- gives 3 , four times
+select top 15 a_id, len(a_id) -- gives length of string
+
+select top 15 a_id,concat(left(a_id,4),replicate('X',(len(a_id)-8)),right(a_id,4)) as display 
+from tbl
+
+select top 15 a_id,
+concat(left(a_id,4),replicate('X',(len(a_id)-8)),right(a_id,4)) as display,
+len(a_id) as original_len, len(display) as redacted_len -- doesn't take if we use the name, have to write the whole fun
+from tbl
+
+select top 15 a_id,
+concat(left(a_id,4),replicate('X',(len(a_id)-8)),right(a_id,4)) as display,
+len(a_id) as original_len, 
+len(concat(left(a_id,4),replicate('X',(len(a_id)-8)),right(a_id,4))) as redacted_len 
+from tbl
+
